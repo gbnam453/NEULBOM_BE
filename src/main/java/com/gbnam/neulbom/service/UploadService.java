@@ -29,6 +29,18 @@ public class UploadService {
         return uploadRepository.findById(id);
     }
 
+    // 업로드 데이터 수정 (updatable한 필드: title, detail, type, link)
+    public Upload updateUpload(Long id, Upload updatedUpload) {
+        return uploadRepository.findById(id).map(upload -> {
+            upload.setTitle(updatedUpload.getTitle());
+            upload.setDetail(updatedUpload.getDetail());
+            upload.setType(updatedUpload.getType());
+            upload.setLink(updatedUpload.getLink());
+            // timestamp는 updatable=false 이므로 수정하지 않음.
+            return uploadRepository.save(upload);
+        }).orElseThrow(() -> new RuntimeException("Upload not found with id " + id));
+    }
+
     // 특정 업로드 데이터 삭제
     public void deleteUpload(Long id) {
         uploadRepository.deleteById(id);
