@@ -29,6 +29,17 @@ public class NoticeService {
         return noticeRepository.findById(id);
     }
 
+    // 공지 수정 (updatable한 필드: title, region, content)
+    public Notice updateNotice(Long id, Notice updatedNotice) {
+        return noticeRepository.findById(id).map(notice -> {
+            notice.setTitle(updatedNotice.getTitle());
+            notice.setContent(updatedNotice.getContent());
+            notice.setRegion(updatedNotice.getRegion());
+            // date, timestamp는 updatable=false 이므로 수정하지 않음.
+            return noticeRepository.save(notice);
+        }).orElseThrow(() -> new RuntimeException("Notice not found with id " + id));
+    }
+
     // 특정 공지 삭제
     public void deleteNotice(Long id) {
         noticeRepository.deleteById(id);
