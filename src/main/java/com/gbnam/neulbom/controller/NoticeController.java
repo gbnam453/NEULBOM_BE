@@ -4,6 +4,7 @@ import com.gbnam.neulbom.entity.Notice;
 import com.gbnam.neulbom.entity.NoticeImage;
 import com.gbnam.neulbom.service.NoticeService;
 import com.gbnam.neulbom.service.NoticeImageService;
+import com.gbnam.neulbom.service.NotificationService; // 추가: NotificationService import
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,14 @@ public class NoticeController {
 
     private final NoticeService noticeService;
     private final NoticeImageService noticeImageService;
+    private final NotificationService notificationService; // 추가
 
     // 공지 추가 (POST)
     @PostMapping
     public ResponseEntity<Notice> createNotice(@RequestBody Notice notice) {
         Notice savedNotice = noticeService.createNotice(notice);
+        // 새로운 공지사항 등록 후 알림 전송
+        notificationService.sendNewNoticeNotification(savedNotice);
         return ResponseEntity.ok(savedNotice);
     }
 
